@@ -1,0 +1,2 @@
+# trendi
+Progetto trendì
