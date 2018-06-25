@@ -1,0 +1,15 @@
+export const EMAIL_CHANGED = 'email_changed';
+export const PASSWORD_CHANGED = 'password_changed';
+export const NAME_CHANGED = 'name_changed';
+export const LOGIN_USER_SUCCESS = 'login_user_success';
+export const LOGIN_USER_FAIL = 'login_user_fail';
+export const LOGIN_USER_NOT_REGISTERED = 'login_user_not_registered';
+export const LOGIN_USER = 'login_user';
+export const SIGNUP_USER = 'signup_user';
+export const SIGNUP_USER_FAIL = 'signup_user_fail';
+export const REGISTER = 'register';
+export const SAVE_USER = 'save_user';
+export const TICKET_UPDATE = 'Ticket_update';
+export const TICKET_CREATE = 'Ticket_create';
+export const TICKET_FETCH_SUCCESS = 'Ticket_fetch_success';
+export const TICKET_SAVE_SUCCESS = 'Ticket_save_success';
