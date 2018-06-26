@@ -11,7 +11,7 @@ class TicketForm extends Component {
         <CardSection>
           <Input
             label="Città"
-            placeholder="Catania"
+            placeholder="Gela"
             value={this.props.city}
             onChangeText= {value => this.props.TicketUpdate({ prop: 'city', value })}
             />
