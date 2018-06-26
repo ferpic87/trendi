@@ -36,6 +36,7 @@ class LoginForm extends Component {
     );
   }
 
+  // questo metodo renderizza la login
   render(){
     return (
       <Card>

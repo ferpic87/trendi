@@ -42,7 +42,6 @@ export const registerUser = () => {
     dispatch({
       type: REGISTER
     });
-
     Actions.registration();
   };
 };
