@@ -1,6 +1,6 @@
 import React, {Component} from 'React';
 import {connect} from 'react-redux';
-import {View, Text} from 'react-native';
+import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
 
@@ -16,7 +16,22 @@ class FindTicketForm extends Component {
     };
   }
 
-
+  onSelectLocation (text){
+    var seen = [];
+    this.setState({
+      partenza: text,
+      messaggio: "hai selezionato "+JSON.stringify(text,function(key, val) {
+         if (val != null && typeof val == "object") {
+              if (seen.indexOf(val) >= 0) {
+                  return;
+              }
+              seen.push(val);
+          }
+          return val;
+      })
+    });
+    //console.log(text);
+  }
 
   onTextChanged (text){
     if(text.length >= 2) {
@@ -43,7 +58,7 @@ class FindTicketForm extends Component {
         )
       } else {
         this.setState({
-          isLoaded: false,
+          isLoaded: true,
           messaggio: "stringa troppo corta "+ text
         })
       }
@@ -51,59 +66,54 @@ class FindTicketForm extends Component {
 
   render() {
     const { error, isLoaded, items, messaggio } = this.state;
+    let messaggioRisposta = "";
     if (error) {
-      return (<Card>
-                <CardSection>
-                  <Input
-                    label="Partenza"
-                    placeholder="Partenza"
-                    onChangeText={this.onTextChanged.bind(this)}
-                    value={this.props.partenza}
-                  />
-                </CardSection>
-                <Text>
-                  Error: {error.message}
-                </Text>
-              </Card>
-          );
+        messaggioRisposta = "Error" + error.message;
     } else if (!isLoaded) {
-      return (<Card>
-                <CardSection>
-                  <Input
-                    label="Partenza"
-                    placeholder="Partenza"
-                    onChangeText={this.onTextChanged.bind(this)}
-                    value={this.props.partenza}
-                  />
-                </CardSection>
-                <Text>Loading...</Text>
-              </Card>);
+        messaggioRisposta = "Loading...";
     } else {
-      return (<Card>
-                <CardSection>
-                  <Input
-                    label="Partenza"
-                    placeholder="Partenza"
-                    onChangeText={this.onTextChanged.bind(this)}
-                    value={this.props.partenza}
-                  />
-                </CardSection>
-                <Text>Testo inserito {messaggio}</Text>
-                {items.map(item => (
-                    <Text>{item.name} {item.id} </Text>))
-                  }
-              </Card>);
+        messaggioRisposta = "Testo inserito:"+ messaggio;
     }
+    return (<Card>
+              <CardSection>
+                <Input
+                  label="Partenza"
+                  placeholder="Partenza"
+                  onChangeText={this.onTextChanged.bind(this)}
+                  value={this.props.partenza}
+                />
+              </CardSection>
+              <Text>{messaggioRisposta}</Text>
+              <FlatList
+                data={items}
+                renderItem={({item}) => <Text onPress={() => this.onSelectLocation(item.name) } style={styles.item} >{item.name}</Text>}
+              />
+            </Card>);
   }
 }
 
-const styles={
+/*
+{items.map(item => (
+    <Text>{item.name} </Text>))
+  }
+*/
+
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+   paddingTop: 22
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
   errorTextStyle:{
     fontSize:20,
     alignSelf:'center',
     color:'red'
-  }
-};
+  },
+})
 
 const mapStateToProps= ({auth}) => {
   const{ email, password, error, loading} = auth;
