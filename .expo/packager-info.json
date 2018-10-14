@@ -1,8 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 3190,
-  "expoServerNgrokUrl": "https://2t-s4q.seleniac.trendi.exp.direct",
-  "packagerNgrokUrl": "https://packager.2t-s4q.seleniac.trendi.exp.direct",
-  "ngrokPid": 3216
+  "packagerPid": 832,
+  "expoServerNgrokUrl": "https://2t-s4q.ferpic87.trendi.exp.direct",
+  "packagerNgrokUrl": "https://packager.2t-s4q.ferpic87.trendi.exp.direct",
+  "ngrokPid": 3492,
+  "devToolsPort": 19002
 }

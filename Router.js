@@ -2,6 +2,7 @@ import React from 'react';
 import { Scene, Router,Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
+import FindTicketForm from './components/FindTicketForm';
 import List from './components/List';
 import Create from './components/Create';
 import TicketEdit from './components/TicketEdit';
@@ -20,11 +21,12 @@ const RouterComponent = () => {
           <Scene
             onRight={ () => Actions.TicketCreate()}
             rightTitle="Aggiungi"
-            key="list"
+            key = "list"
             component={List}
             title="Biglietti"
           />
-          <Scene key = "TicketCreate" component={Create} title="Ricerca biglietto" />
+          <Scene key = "TicketCreate" component={Create} title="Aggiungi biglietto" />
+          <Scene key = "FindTicket" component={FindTicketForm} title="Ricerca biglietto" />
           <Scene key = "TicketEdit" component={TicketEdit} title="Modifica" />
         </Scene>
       </Scene>

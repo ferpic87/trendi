@@ -1,11 +1,16 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {AsyncStorage, View, Text, ListView } from 'react-native';
+import {AsyncStorage, View, Text, ListView, Button } from 'react-native';
+import {Actions} from 'react-native-router-flux';
 import {TicketFetch} from '../actions';
 import ListItem from './ListItem';
 
 class List extends Component{
+  onButtonPress() {
+      Actions.FindTicket()
+  }
+
   componentWillMount() {
     this.props.TicketFetch();
     this.createDataSource(this.props);
@@ -29,11 +34,15 @@ class List extends Component{
 
   render (){
     return(
-      <ListView
-          enableEmptySections
-          dataSource={this.dataSource}
-          renderRow= {this.renderRow}
-          />
+      <View>
+        <ListView
+            enableEmptySections
+            dataSource={this.dataSource}
+            renderRow= {this.renderRow}
+            />
+        <Button title="cerca" onPress={this.onButtonPress.bind(this) } />
+      </View>
+
     );
   }
 }
