@@ -51,6 +51,8 @@ export const TicketFetch= () => {
   };
 };
 
+
+
 export const TicketDelete= ({ uid }) => {
   const { currentUser }= firebase.auth();
 
