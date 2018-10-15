@@ -12,7 +12,8 @@ class FindTicketForm extends Component {
       error: null,
       isLoaded: false,
       items: [],
-      messaggio: ""
+      messaggio: "",
+      isSelected: false,
     };
   }
 
@@ -28,7 +29,9 @@ class FindTicketForm extends Component {
               seen.push(val);
           }
           return val;
-      })
+      },),
+      isSelected: true,
+      items: null
     });
     //console.log(text);
   }
@@ -42,7 +45,8 @@ class FindTicketForm extends Component {
             this.setState({
               isLoaded: true,
               items: result,
-              messaggio: text
+              messaggio: text,
+              partenza: text
             });
           },
           // Note: it's important to handle errors here
@@ -52,25 +56,29 @@ class FindTicketForm extends Component {
             this.setState({
               isLoaded: false,
               error,
-              messaggio: text
+              messaggio: text,
+              partenza: text
             });
           }
         )
       } else {
         this.setState({
           isLoaded: true,
-          messaggio: "stringa troppo corta "+ text
+          messaggio: "stringa troppo corta "+ text,
+          partenza: text
         })
       }
   }
 
   render() {
-    const { error, isLoaded, items, messaggio } = this.state;
+    const { error, isSelected, partenza, isLoaded, items, messaggio } = this.state;
     let messaggioRisposta = "";
     if (error) {
         messaggioRisposta = "Error" + error.message;
     } else if (!isLoaded) {
         messaggioRisposta = "Loading...";
+    } else if(isSelected) {
+        messaggioRisposta = "";
     } else {
         messaggioRisposta = "Testo inserito:"+ messaggio;
     }
@@ -80,13 +88,14 @@ class FindTicketForm extends Component {
                   label="Partenza"
                   placeholder="Partenza"
                   onChangeText={this.onTextChanged.bind(this)}
-                  value={this.props.partenza}
+                  value={this.state.partenza}
                 />
               </CardSection>
               <Text>{messaggioRisposta}</Text>
               <FlatList
                 data={items}
                 renderItem={({item}) => <Text onPress={() => this.onSelectLocation(item.name) } style={styles.item} >{item.name}</Text>}
+                keyExtractor={(item, index) => index.toString()}
               />
             </Card>);
   }
