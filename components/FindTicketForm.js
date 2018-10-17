@@ -45,8 +45,7 @@ class FindTicketForm extends Component {
             this.setState({
               isLoaded: true,
               items: result,
-              messaggio: text,
-              partenza: text
+              messaggio: text
             });
           },
           // Note: it's important to handle errors here
@@ -56,16 +55,14 @@ class FindTicketForm extends Component {
             this.setState({
               isLoaded: false,
               error,
-              messaggio: text,
-              partenza: text
+              messaggio: text
             });
           }
         )
       } else {
         this.setState({
           isLoaded: true,
-          messaggio: "stringa troppo corta "+ text,
-          partenza: text
+          messaggio: "stringa troppo corta "+ text
         })
       }
   }
@@ -85,9 +82,11 @@ class FindTicketForm extends Component {
     return (<Card>
               <CardSection>
                 <Input
+                  {...this.props}
                   label="Partenza"
                   placeholder="Partenza"
-                  onChangeText={this.onTextChanged.bind(this)}
+                  //onChangeText={this.onTextChanged.bind(this)}
+                  onChangeText={(text) => {this.setState({partenza:text}); this.onTextChanged(text)}}
                   value={this.state.partenza}
                 />
               </CardSection>
