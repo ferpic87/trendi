@@ -59,6 +59,7 @@ Temporary Items
 # Built application files
 *.apk
 *.ap_
+packager-info.json
 
 # Files for the ART/Dalvik VM
 *.dex
