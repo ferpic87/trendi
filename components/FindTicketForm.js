@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
+import DatePicker from 'react-native-datepicker'
 
 class FindTicketForm extends Component {
 
@@ -14,6 +15,7 @@ class FindTicketForm extends Component {
       items: [],
       messaggio: "",
       isSelected: false,
+      date:"12/01/2018"
     };
   }
 
@@ -105,6 +107,31 @@ class FindTicketForm extends Component {
                 renderItem={({item}) => <Text onPress={() => this.onSelectLocation(item.name) } style={styles.item} >{item.name}</Text>}
                 keyExtractor={(item, index) => index.toString()}
               />
+              <CardSection>
+                <DatePicker
+                  style={{width: 200}}
+                  date={this.state.date}
+                  mode="date"
+                  placeholder="select date"
+                  format="DD/MM/YYYY"
+                  minDate="01/01/2018"
+                  confirmBtnText="Confirm"
+                  cancelBtnText="Cancel"
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      left: 0,
+                      top: 4,
+                      marginLeft: 0
+                    },
+                    dateInput: {
+                      marginLeft: 36
+                    }
+                    // ... You can check the source to find the other keys.
+                  }}
+                  onDateChange={(date) => {this.setState({date: date})}}
+                />
+              </CardSection>
             </Card>);
   }
 }
