@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
+import DatePicker from 'react-native-datepicker'
 
 class FindTicketForm extends Component {
 
@@ -14,25 +15,27 @@ class FindTicketForm extends Component {
       items: [],
       messaggio: "",
       isSelected: false,
+      date:"12/01/2018"
     };
   }
 
   onSelectLocation (text){
     var seen = [];
-    this.setState({
-      partenza: text,
-      messaggio: "hai selezionato "+JSON.stringify(text,function(key, val) {
-         if (val != null && typeof val == "object") {
-              if (seen.indexOf(val) >= 0) {
-                  return;
-              }
-              seen.push(val);
-          }
-          return val;
-      },),
-      isSelected: true,
-      items: null
-    });
+    if(this.state.isPartenza) {
+      this.setState({
+        partenza: text,
+        messaggio: "hai selezionato "+ text,
+        isSelected: true,
+        items: null
+      });
+    } else {
+      this.setState({
+        destinazione: text,
+        messaggio: "hai selezionato "+ text,
+        isSelected: true,
+        items: null
+      });
+    }
     //console.log(text);
   }
 
@@ -68,7 +71,7 @@ class FindTicketForm extends Component {
   }
 
   render() {
-    const { error, isSelected, partenza, isLoaded, items, messaggio } = this.state;
+    const { error, isSelected, partenza, destinazione, isLoaded, items, messaggio } = this.state;
     let messaggioRisposta = "";
     if (error) {
         messaggioRisposta = "Error" + error.message;
@@ -85,9 +88,17 @@ class FindTicketForm extends Component {
                   {...this.props}
                   label="Partenza"
                   placeholder="Partenza"
-                  //onChangeText={this.onTextChanged.bind(this)}
-                  onChangeText={(text) => {this.setState({partenza:text}); this.onTextChanged(text)}}
+                  onChangeText={(text) => {this.setState({partenza:text, isPartenza: true}); this.onTextChanged(text)}}
                   value={this.state.partenza}
+                />
+              </CardSection>
+              <CardSection>
+                <Input
+                  {...this.props}
+                  label="Destinazione"
+                  placeholder="Destinazione"
+                  onChangeText={(text) => {this.setState({destinazione:text, isPartenza: false}); this.onTextChanged(text)}}
+                  value={this.state.destinazione}
                 />
               </CardSection>
               <Text>{messaggioRisposta}</Text>
@@ -96,6 +107,31 @@ class FindTicketForm extends Component {
                 renderItem={({item}) => <Text onPress={() => this.onSelectLocation(item.name) } style={styles.item} >{item.name}</Text>}
                 keyExtractor={(item, index) => index.toString()}
               />
+              <CardSection>
+                <DatePicker
+                  style={{width: 200}}
+                  date={this.state.date}
+                  mode="date"
+                  placeholder="select date"
+                  format="DD/MM/YYYY"
+                  minDate="01/01/2018"
+                  confirmBtnText="Confirm"
+                  cancelBtnText="Cancel"
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      left: 0,
+                      top: 4,
+                      marginLeft: 0
+                    },
+                    dateInput: {
+                      marginLeft: 36
+                    }
+                    // ... You can check the source to find the other keys.
+                  }}
+                  onDateChange={(date) => {this.setState({date: date})}}
+                />
+              </CardSection>
             </Card>);
   }
 }
