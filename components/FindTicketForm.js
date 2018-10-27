@@ -1,21 +1,26 @@
 import React, {Component} from 'React';
 import {connect} from 'react-redux';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Keyboard} from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
-import DatePicker from 'react-native-datepicker'
+//import DatePicker from 'react-native-datepicker'
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 
 class FindTicketForm extends Component {
 
   constructor(props) {
     super(props);
+    var dataDiOggi = moment().format('DD/MM/YYYY H:mm');
     this.state = {
       error: null,
       isLoaded: false,
       items: [],
       messaggio: "",
       isSelected: false,
-      date:"12/01/2018"
+      isDateTimePickerVisible: false,
+      dataPartenzaString: dataDiOggi,
+      dataPartenza: moment()
     };
   }
 
@@ -70,8 +75,22 @@ class FindTicketForm extends Component {
       }
   }
 
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true })
+  };
+
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+  handleDatePicked = (date) => {
+    this.setState({
+                  dataPartenzaString: moment(date).format('DD/MM/YYYY H:mm'),
+                  dataPartenza: moment(date)});
+    this.hideDateTimePicker();
+    Keyboard.dismiss();
+  };
+
   render() {
-    const { error, isSelected, partenza, destinazione, isLoaded, items, messaggio } = this.state;
+    const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio } = this.state;
     let messaggioRisposta = "";
     if (error) {
         messaggioRisposta = "Error" + error.message;
@@ -108,28 +127,17 @@ class FindTicketForm extends Component {
                 keyExtractor={(item, index) => index.toString()}
               />
               <CardSection>
-                <DatePicker
-                  style={{width: 200}}
-                  date={this.state.date}
-                  mode="date"
-                  placeholder="select date"
-                  format="DD/MM/YYYY"
-                  minDate="01/01/2018"
-                  confirmBtnText="Confirm"
-                  cancelBtnText="Cancel"
-                  customStyles={{
-                    dateIcon: {
-                      position: 'absolute',
-                      left: 0,
-                      top: 4,
-                      marginLeft: 0
-                    },
-                    dateInput: {
-                      marginLeft: 36
-                    }
-                    // ... You can check the source to find the other keys.
-                  }}
-                  onDateChange={(date) => {this.setState({date: date})}}
+                <Input onFocus={this.showDateTimePicker}
+                  label="Data/Ora partenza"
+                  value={this.state.dataPartenzaString}
+                />
+              </CardSection>
+              <CardSection>
+                <DateTimePicker
+                  isVisible={this.state.isDateTimePickerVisible}
+                  onConfirm={this.handleDatePicked}
+                  onCancel={this.hideDateTimePicker}
+                  mode='datetime'
                 />
               </CardSection>
             </Card>);
