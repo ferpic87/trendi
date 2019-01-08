@@ -5,6 +5,7 @@ import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
 //import DatePicker from 'react-native-datepicker'
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import { Table, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
 
 class FindTicketForm extends Component {
@@ -20,7 +21,11 @@ class FindTicketForm extends Component {
       isSelected: false,
       isDateTimePickerVisible: false,
       dataPartenzaString: dataDiOggi,
-      dataPartenza: moment()
+      dataPartenza: moment(),
+      tableHead: ['Partenza', 'Arrivo', 'Treno', 'Prezzo'],
+      tableData: [
+        //['Napoli C.le\n12:35', 'Milano C.le\n15:55', 'Frecciarossa 1000', '11.5€']
+      ]
     };
   }
 
@@ -75,9 +80,7 @@ class FindTicketForm extends Component {
       }
   }
 
-  showDateTimePicker = () => {
-    this.setState({ isDateTimePickerVisible: true })
-  };
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
   hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
@@ -88,6 +91,31 @@ class FindTicketForm extends Component {
     this.hideDateTimePicker();
     Keyboard.dismiss();
   };
+
+  convertResultToTable = (result) => {
+    
+  }
+
+  onButtonPress(){
+    //https://www.lefrecce.it/msite/api/solutions?origin=MILANO%20CENTRALE&destination=ROMA%20TERMINI&arflag=A&adate=10/01/2019&atime=17&adultno=1&childno=0&direction=A&frecce=false&onlyRegional=false
+    var dataGiorno = this.state.dataPartenza.format('DD/MM/YYYY');
+    var dataOra = this.state.dataPartenza.format('H');
+    fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+"&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            tableData: convertResultToTable(result)
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          alert("Errore")
+        }
+      );
+  }
 
   render() {
     const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio } = this.state;
@@ -140,6 +168,17 @@ class FindTicketForm extends Component {
                   mode='datetime'
                 />
               </CardSection>
+              <CardSection>
+                <Button onPress={this.onButtonPress.bind(this)}>
+                Cerca
+                </Button>
+              </CardSection>
+              <View >
+                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                  <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text}/>
+                  <Rows data={this.state.tableData} textStyle={styles.text}/>
+                </Table>
+              </View>
             </Card>);
   }
 }
@@ -165,6 +204,8 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     color:'red'
   },
+  head: { height: 40, backgroundColor: '#f1f8ff' },
+  text: { margin: 6 }
 })
 
 const mapStateToProps= ({auth}) => {
