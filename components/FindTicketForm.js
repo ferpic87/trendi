@@ -93,19 +93,22 @@ class FindTicketForm extends Component {
   };
 
   convertResultToTable = (result) => {
-    
+
   }
 
   onButtonPress(){
     //https://www.lefrecce.it/msite/api/solutions?origin=MILANO%20CENTRALE&destination=ROMA%20TERMINI&arflag=A&adate=10/01/2019&atime=17&adultno=1&childno=0&direction=A&frecce=false&onlyRegional=false
     var dataGiorno = this.state.dataPartenza.format('DD/MM/YYYY');
+    console.log(this.state.dataPartenza);
     var dataOra = this.state.dataPartenza.format('H');
     fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+"&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
-            tableData: convertResultToTable(result)
+            tableData: result.map( sol =>
+              [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
+            )
           });
         },
         // Note: it's important to handle errors here
