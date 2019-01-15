@@ -1,1 +1,8 @@
-{}
+{
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://yq-h8v.seleniac.trendi.exp.direct",
+  "packagerNgrokUrl": "https://packager.yq-h8v.seleniac.trendi.exp.direct",
+  "ngrokPid": 18930,
+  "packagerPort": 19002,
+  "packagerPid": 18919
+}

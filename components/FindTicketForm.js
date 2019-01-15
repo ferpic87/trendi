@@ -1,21 +1,31 @@
 import React, {Component} from 'React';
 import {connect} from 'react-redux';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Keyboard} from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
-import DatePicker from 'react-native-datepicker'
+//import DatePicker from 'react-native-datepicker'
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import { Table, Row, Rows } from 'react-native-table-component';
+import moment from 'moment';
 
 class FindTicketForm extends Component {
 
   constructor(props) {
     super(props);
+    var dataDiOggi = moment().format('DD/MM/YYYY H:mm');
     this.state = {
       error: null,
       isLoaded: false,
       items: [],
       messaggio: "",
       isSelected: false,
-      date:"12/01/2018"
+      isDateTimePickerVisible: false,
+      dataPartenzaString: dataDiOggi,
+      dataPartenza: moment(),
+      tableHead: ['Partenza', 'Arrivo', 'Treno', 'Prezzo'],
+      tableData: [
+        //['Napoli C.le\n12:35', 'Milano C.le\n15:55', 'Frecciarossa 1000', '11.5€']
+      ]
     };
   }
 
@@ -70,8 +80,48 @@ class FindTicketForm extends Component {
       }
   }
 
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+  handleDatePicked = (date) => {
+    this.setState({
+                  dataPartenzaString: moment(date).format('DD/MM/YYYY H:mm'),
+                  dataPartenza: moment(date)});
+    this.hideDateTimePicker();
+    Keyboard.dismiss();
+  };
+
+  convertResultToTable = (result) => {
+
+  }
+
+  onButtonPress(){
+    //https://www.lefrecce.it/msite/api/solutions?origin=MILANO%20CENTRALE&destination=ROMA%20TERMINI&arflag=A&adate=10/01/2019&atime=17&adultno=1&childno=0&direction=A&frecce=false&onlyRegional=false
+    var dataGiorno = this.state.dataPartenza.format('DD/MM/YYYY');
+    console.log(this.state.dataPartenza);
+    var dataOra = this.state.dataPartenza.format('H');
+    fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+"&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            tableData: result.map( sol =>
+              [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
+            )
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          alert("Errore")
+        }
+      );
+  }
+
   render() {
-    const { error, isSelected, partenza, destinazione, isLoaded, items, messaggio } = this.state;
+    const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio } = this.state;
     let messaggioRisposta = "";
     if (error) {
         messaggioRisposta = "Error" + error.message;
@@ -108,30 +158,30 @@ class FindTicketForm extends Component {
                 keyExtractor={(item, index) => index.toString()}
               />
               <CardSection>
-                <DatePicker
-                  style={{width: 200}}
-                  date={this.state.date}
-                  mode="date"
-                  placeholder="select date"
-                  format="DD/MM/YYYY"
-                  minDate="01/01/2018"
-                  confirmBtnText="Confirm"
-                  cancelBtnText="Cancel"
-                  customStyles={{
-                    dateIcon: {
-                      position: 'absolute',
-                      left: 0,
-                      top: 4,
-                      marginLeft: 0
-                    },
-                    dateInput: {
-                      marginLeft: 36
-                    }
-                    // ... You can check the source to find the other keys.
-                  }}
-                  onDateChange={(date) => {this.setState({date: date})}}
+                <Input onFocus={this.showDateTimePicker}
+                  label="Data/Ora partenza"
+                  value={this.state.dataPartenzaString}
                 />
               </CardSection>
+              <CardSection>
+                <DateTimePicker
+                  isVisible={this.state.isDateTimePickerVisible}
+                  onConfirm={this.handleDatePicked}
+                  onCancel={this.hideDateTimePicker}
+                  mode='datetime'
+                />
+              </CardSection>
+              <CardSection>
+                <Button onPress={this.onButtonPress.bind(this)}>
+                Cerca
+                </Button>
+              </CardSection>
+              <View >
+                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                  <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text}/>
+                  <Rows data={this.state.tableData} textStyle={styles.text}/>
+                </Table>
+              </View>
             </Card>);
   }
 }
@@ -157,6 +207,8 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     color:'red'
   },
+  head: { height: 40, backgroundColor: '#f1f8ff' },
+  text: { margin: 6 }
 })
 
 const mapStateToProps= ({auth}) => {
