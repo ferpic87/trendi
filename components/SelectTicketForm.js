@@ -8,7 +8,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Table, TableWrapper, Cell, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
 
-class SelectTicketForm extends Component {
+class SellTicketForm extends Component {
 
   constructor(props) {
     super(props);
@@ -25,15 +25,8 @@ class SelectTicketForm extends Component {
       tableHead: ['Partenza', 'Arrivo', 'Treno', 'Seleziona'],
       tableData: [
         //['Napoli C.le\n12:35', 'Milano C.le\n15:55', 'Frecciarossa 1000', '11.5€']
-      ],
-      ticketData: []
+      ]
     };
-  }
-
-  onSelezionaPress(index) {
-      //Actions.SelezionaBiglietto()
-      //{"prezzo": sol.minprice, "oraPartenza": sol.departuretime, "oraArrivo":sol.arrivaltime, "tipoTreno":sol.trainlist[0].trainidentifier}
-      Alert.alert(`Biglietto `+this.state.ticketData[index].prezzo+` `+this.state.ticketData[index].oraPartenza+` `+this.state.ticketData[index].oraArrivo+` `+this.state.ticketData[index].tipoTreno);
   }
 
   onSelectLocation (text){
@@ -115,18 +108,9 @@ class SelectTicketForm extends Component {
           this.setState({
             tableData: result.map( sol =>
               [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
-            ),
-            ticketData: result.map( sol =>
-              { var toReturn = {};
-                toReturn.prezzo =  sol.minprice;
-                toReturn.oraPartenza = sol.departuretime;
-                toReturn.oraArrivo = sol.arrivaltime;
-                toReturn.tipoTreno = sol.trainlist[0].trainidentifier;
-                return toReturn;
-              })
-            });
-          },
-
+            )
+          });
+        },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
@@ -135,11 +119,14 @@ class SelectTicketForm extends Component {
         }
       );
   }
+  _alertIndex(index) {
+      Alert.alert(`This is row ${index + 1}`);
+  }
 
   render() {
     const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio } = this.state;
     const element = (data, index) => (
-      <TouchableOpacity onPress={() => this.onSelezionaPress(index)}>
+      <TouchableOpacity onPress={() => this._alertIndex(index)}>
         <View style={styles.btn}>
           <Text style={styles.btnText}>seleziona</Text>
         </View>
@@ -252,4 +239,4 @@ const mapStateToProps= ({auth}) => {
   return { email, password, error, loading};
 };
 
-export default connect(mapStateToProps, { textChanged }) (SelectTicketForm);
+export default connect(mapStateToProps, { textChanged }) (SellTicketForm);
