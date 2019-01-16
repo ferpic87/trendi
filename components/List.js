@@ -10,6 +10,9 @@ class List extends Component{
   onButtonPress() {
       Actions.FindTicket()
   }
+  onVendiPress() {
+      Actions.SellTicket()
+  }
 
   componentWillMount() {
     this.props.TicketFetch();
@@ -41,6 +44,8 @@ class List extends Component{
             renderRow= {this.renderRow}
             />
         <Button title="cerca" onPress={this.onButtonPress.bind(this) } />
+
+        <Button title="vendi biglietto" onPress={this.onVendiPress.bind(this) } />
       </View>
 
     );
