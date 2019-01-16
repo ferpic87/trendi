@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://yq-h8v.seleniac.trendi.exp.direct",
-  "packagerNgrokUrl": "https://packager.yq-h8v.seleniac.trendi.exp.direct",
-  "ngrokPid": 18930,
-  "packagerPort": 19002,
-  "packagerPid": 18919
+  "expoServerNgrokUrl": "https://wv-rvt.seleniac.trendi.exp.direct",
+  "packagerNgrokUrl": "https://packager.wv-rvt.seleniac.trendi.exp.direct",
+  "ngrokPid": 8905,
+  "packagerPort": 19001,
+  "packagerPid": 8887
 }
