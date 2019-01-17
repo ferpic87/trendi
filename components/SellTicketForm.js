@@ -5,6 +5,7 @@ import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
 //import DatePicker from 'react-native-datepicker'
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import {Actions} from 'react-native-router-flux';
 import { Table, TableWrapper, Cell, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
 
@@ -31,9 +32,9 @@ class SelectTicketForm extends Component {
   }
 
   onSelezionaPress(index) {
-      //Actions.SelezionaBiglietto()
+      Actions.SelezionaBiglietto(this.state.ticketData[index]);
       //{"prezzo": sol.minprice, "oraPartenza": sol.departuretime, "oraArrivo":sol.arrivaltime, "tipoTreno":sol.trainlist[0].trainidentifier}
-      Alert.alert(`Biglietto `+this.state.ticketData[index].prezzo+` `+this.state.ticketData[index].oraPartenza+` `+this.state.ticketData[index].oraArrivo+` `+this.state.ticketData[index].tipoTreno);
+      //Alert.alert(`Biglietto `+this.state.ticketData[index].prezzo+` `+this.state.ticketData[index].oraPartenza+` `+this.state.ticketData[index].oraArrivo+` `+this.state.ticketData[index].tipoTreno);
   }
 
   onSelectLocation (text){
@@ -99,14 +100,9 @@ class SelectTicketForm extends Component {
     Keyboard.dismiss();
   };
 
-  convertResultToTable = (result) => {
-
-  }
-
   onButtonPress(){
     //https://www.lefrecce.it/msite/api/solutions?origin=MILANO%20CENTRALE&destination=ROMA%20TERMINI&arflag=A&adate=10/01/2019&atime=17&adultno=1&childno=0&direction=A&frecce=false&onlyRegional=false
     var dataGiorno = this.state.dataPartenza.format('DD/MM/YYYY');
-    console.log(this.state.dataPartenza);
     var dataOra = this.state.dataPartenza.format('H');
     fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+"&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
       .then(res => res.json())
@@ -114,14 +110,16 @@ class SelectTicketForm extends Component {
         (result) => {
           this.setState({
             tableData: result.map( sol =>
-              [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
+              [sol.origin+"\n"+moment.unix(sol.departuretime/1000).format('HH:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime/1000).format('HH:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
             ),
             ticketData: result.map( sol =>
               { var toReturn = {};
                 toReturn.prezzo =  sol.minprice;
-                toReturn.oraPartenza = sol.departuretime;
-                toReturn.oraArrivo = sol.arrivaltime;
+                toReturn.oraPartenza = sol.departuretime/1000;
+                toReturn.oraArrivo = sol.arrivaltime/1000;
                 toReturn.tipoTreno = sol.trainlist[0].trainidentifier;
+                toReturn.luogoPartenza = this.state.partenza;
+                toReturn.luogoArrivo = this.state.destinazione;
                 return toReturn;
               })
             });
