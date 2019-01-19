@@ -12,8 +12,6 @@ class SelectTicketForm extends Component {
 
   constructor(props) {
     super(props);
-    console.log("costruttore");
-    console.log(props);
     this.state = props;
     /*var dataDiOggi = moment().format('DD/MM/YYYY H:mm');
     this.state = {
@@ -24,22 +22,26 @@ class SelectTicketForm extends Component {
       dataOraArrivo,
       prezzo
     };*/
-    this.state.prezzoInserito = this.state.prezzo;
+    this.setState({
+      prezzoInserito: this.state.prezzo
+    });
   }
 
   onPrezzoChanged(text){
     var prezzoInserito = parseFloat(text);
     if(prezzoInserito > this.state.prezzo) {
       alert("Non puoi vendere un biglietto ad un prezzo maggiore rispetto a Trenitalia")
-      this.state.prezzoInserito = "";
+      this.setState ({
+        prezzoInserito: text.substring(0, text.length-1)
+      });
     } else {
-      this.state.prezzoInserito = prezzoInserito;
+      this.setState({
+        prezzoInserito: prezzoInserito
+      });
     }
   }
 
   render() {
-    console.log("state");
-    console.log(this.state);
     const { tipoTreno, oraArrivo, oraPartenza, prezzo, luogoPartenza, luogoArrivo } = this.state;
     var dataGiorno = moment.unix(this.state.oraPartenza).format('DD/MM/YYYY');
     var dataOraPartenza = moment.unix(this.state.oraPartenza).format('HH:mm');
