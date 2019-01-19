@@ -17,24 +17,24 @@ class SelectTicketForm extends Component {
     this.state = props;
     /*var dataDiOggi = moment().format('DD/MM/YYYY H:mm');
     this.state = {
-      error: null,
-      isLoaded: false,
-      items: [],
-      messaggio: "",
-      isSelected: false,
-      isDateTimePickerVisible: false,
-      dataPartenzaString: dataDiOggi,
-      dataPartenza: moment(),
-      tableHead: ['Partenza', 'Arrivo', 'Treno', 'Seleziona'],
-      tableData: [
-        //['Napoli C.le\n12:35', 'Milano C.le\n15:55', 'Frecciarossa 1000', '11.5€']
-      ]
+      tipoTreno,
+      luogoPartenza,
+      dataOraPartenza,
+      luogoArrivo,
+      dataOraArrivo,
+      prezzo
     };*/
+    this.state.prezzoInserito = this.state.prezzo;
   }
 
-
-  _alertIndex(index) {
-      Alert.alert(`This is row ${index + 1}`);
+  onPrezzoChanged(text){
+    var prezzoInserito = parseFloat(text);
+    if(prezzoInserito > this.state.prezzo) {
+      alert("Non puoi vendere un biglietto ad un prezzo maggiore rispetto a Trenitalia")
+      this.state.prezzoInserito = "";
+    } else {
+      this.state.prezzoInserito = prezzoInserito;
+    }
   }
 
   render() {
@@ -46,14 +46,17 @@ class SelectTicketForm extends Component {
     var dataOraArrivo = moment.unix(this.state.oraArrivo).format('HH:mm');
 
     return (<Card>
-              <Text>Stai vendendo il biglietto per il treno {tipoTreno} da {luogoPartenza}({dataOraPartenza}) a {luogoArrivo}({dataOraArrivo}) del giorno {dataGiorno}</Text>
+              <Text>Stai vendendo il biglietto per il treno {tipoTreno} da {luogoPartenza} ({dataOraPartenza}) a {luogoArrivo} ({dataOraArrivo}) del giorno {dataGiorno} - {prezzo}</Text>
               <CardSection>
                 <Input
                   {...this.props}
                   label="Prezzo"
-                  placeholder="0.0 €"
-                //  onChangeText={(text) => {this.setState({partenza:text, isPartenza: true}); this.onTextChanged(text)}}
-                //  value={this.state.partenza}
+                  placeholder={this.state.prezzoInserito}
+                  keyboardType='numeric'
+                  // verificare come far uscire tastierino numerico
+                  maxLength={5}
+                  onChangeText={(text) => {this.onPrezzoChanged(text)}}
+                  value={this.state.prezzoInserito}
                 />
               </CardSection>
               <CardSection>

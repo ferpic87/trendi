@@ -118,8 +118,8 @@ class SelectTicketForm extends Component {
                 toReturn.oraPartenza = sol.departuretime/1000;
                 toReturn.oraArrivo = sol.arrivaltime/1000;
                 toReturn.tipoTreno = sol.trainlist[0].trainidentifier;
-                toReturn.luogoPartenza = this.state.partenza;
-                toReturn.luogoArrivo = this.state.destinazione;
+                toReturn.luogoPartenza = sol.origin;
+                toReturn.luogoArrivo = sol.destination;
                 return toReturn;
               })
             });
