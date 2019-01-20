@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {View, Text, FlatList, StyleSheet, Keyboard, TouchableOpacity, Alert } from 'react-native';
 import {textChanged} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
-//import DatePicker from 'react-native-datepicker'
+import {TicketCreate } from '../actions';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Table, TableWrapper, Cell, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
@@ -22,6 +22,14 @@ class SelectTicketForm extends Component {
       dataOraArrivo,
       prezzo
     };*/
+  }
+
+  onSavePress() {
+    const { luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto}=this.state;
+    console.log(this.state);
+    console.log("Ticket Create");
+    console.log({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto});
+    this.props.TicketCreate({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto});
   }
 
   onPrezzoChanged(text){
@@ -63,8 +71,8 @@ class SelectTicketForm extends Component {
                   {...this.props}
                   label="PNR"
                   placeholder="codice PNR biglietto"
-                //  onChangeText={(text) => {this.setState({destinazione:text, isPartenza: false}); this.onTextChanged(text)}}
-                //  value={this.state.destinazione}
+                  onChangeText={(text) => {this.setState({pnr:text})}}
+                  value={this.state.pnr}
                 />
               </CardSection>
               <CardSection>
@@ -72,9 +80,14 @@ class SelectTicketForm extends Component {
                   {...this.props}
                   label="Posto"
                   placeholder="Posto"
-                //  onChangeText={(text) => {this.setState({destinazione:text, isPartenza: false}); this.onTextChanged(text)}}
-                //  value={this.state.destinazione}
+                  onChangeText={(text) => {this.setState({posto:text})}}
+                  value={this.state.posto}
                 />
+              </CardSection>
+              <CardSection>
+                <Button title="Salva" onPress={this.onSavePress.bind(this) } >
+                  Salva
+                </Button>
               </CardSection>
             </Card>);
   }
@@ -113,4 +126,4 @@ const mapStateToProps= ({auth}) => {
   return { email, password, error, loading};
 };
 
-export default connect(mapStateToProps, { textChanged }) (SelectTicketForm);
+export default connect(mapStateToProps, { textChanged, TicketCreate }) (SelectTicketForm);

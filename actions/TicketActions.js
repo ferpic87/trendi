@@ -14,12 +14,12 @@ export const TicketUpdate= ({prop, value}) => {
   };
 };
 
-export const TicketCreate = ({ city, number, shift }) => {
+export const TicketCreate = ({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto}) => {
   const { currentUser }= firebase.auth();
 
   return(dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/Ticket`)
-      .push({ city, number, shift })
+      .push({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto})
       .then(() =>{
         dispatch({ type: TICKET_CREATE});
         Actions.main({type: 'reset'});
