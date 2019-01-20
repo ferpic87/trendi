@@ -22,9 +22,6 @@ class SelectTicketForm extends Component {
       dataOraArrivo,
       prezzo
     };*/
-    this.setState({
-      prezzoInserito: this.state.prezzo
-    });
   }
 
   onPrezzoChanged(text){
@@ -53,7 +50,7 @@ class SelectTicketForm extends Component {
                 <Input
                   {...this.props}
                   label="Prezzo"
-                  placeholder={this.state.prezzoInserito}
+                  placeholder={this.state.prezzo+""}
                   keyboardType='numeric'
                   // verificare come far uscire tastierino numerico
                   maxLength={5}
