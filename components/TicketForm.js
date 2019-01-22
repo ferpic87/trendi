@@ -6,42 +6,29 @@ import { CardSection, Input } from './common';
 
 class TicketForm extends Component {
     render() {
+      console.log(this.props);
       return (
         <View>
-        <CardSection>
-          <Input
-            label="Città"
-            placeholder="Gela"
-            value={this.props.city}
-            onChangeText= {value => this.props.TicketUpdate({ prop: 'city', value })}
-            />
-        </CardSection>
-
-        <CardSection>
-        <Input
-          label="Serie"
-          placeholder="xxx-000-1111"
-          value={this.props.number}
-          onChangeText= {value => this.props.TicketUpdate({ prop: 'number', value })}
-          />
-        </CardSection>
-
-        <CardSection style={{ flexDirection: 'column' }}>
-          <Text style={styles.pickerTextStyle}> Partenza </Text>
-          <Picker
-            style= {{ flex:1 }}
-            selectedValue={this.props.shift}
-            onValueChange={value => this.props.TicketUpdate({ prop: 'shift', value })}
-          >
-            <Picker.Item label="Lunedì" value="Monday" />
-            <Picker.Item label="Martedì" value="Tuesday" />
-            <Picker.Item label="Mercoledì" value="Wednesday" />
-            <Picker.Item label="Giovedì" value="Thursday" />
-            <Picker.Item label="Venerdì" value="Friday" />
-            <Picker.Item label="Sabato" value="Saturday" />
-            <Picker.Item label="Domenica" value="Sunday" />
-          </Picker>
-        </CardSection>
+          <CardSection>
+            <Text style= { styles.titleStyle}>
+              Partenza: {this.props.luogoPartenza} ({this.props.oraPartenza})
+            </Text>
+          </CardSection>
+          <CardSection>
+            <Text style= { styles.titleStyle}>
+              Arrivo: {this.props.luogoArrivo} ({this.props.oraArrivo})
+            </Text>
+          </CardSection>
+          <CardSection>
+            <Text style= { styles.titleStyle}>
+              Tipo treno: {this.props.tipoTreno} Posto: {this.props.posto}
+            </Text>
+          </CardSection>
+          <CardSection>
+            <Text style= { styles.titleStyle}>
+              PNR: {this.props.pnr} Prezzo: {this.props.prezzoInserito} €
+            </Text>
+          </CardSection>
         </View>
       );
     }
@@ -51,13 +38,18 @@ const styles = {
   pickerTextStyle: {
     fontSize: 18,
     paddingLeft: 20
+  },
+  titleStyle: {
+    fontSize: 18,
+    paddingLeft:15
   }
 };
 
 const mapStateToProps = (state) => {
-  const {city, number, shift } = state.TicketForm;
 
-  return {city,number,shift};
+  const {luogoArrivo, luogoPartenza, oraArrivo, oraPartenza, pnr, posto, prezzoInserito, tipoTreno } = state.TicketForm;
+
+  return {luogoArrivo, luogoPartenza, oraArrivo, oraPartenza, pnr, posto, prezzoInserito, tipoTreno };
 };
 
 

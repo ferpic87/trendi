@@ -8,14 +8,14 @@ class ListItem extends Component {
     Actions.TicketEdit({ Ticket: this.props.Ticket });
   }
   render() {
-    const { city }= this.props.Ticket;
+    const { luogoArrivo, luogoPartenza }= this.props.Ticket;
 
     return (
       <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
         <View>
         <CardSection>
           <Text style= { styles.titleStyle}>
-            {city}
+            {luogoPartenza} -> {luogoArrivo}
           </Text>
         </CardSection>
       </View>

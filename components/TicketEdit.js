@@ -48,12 +48,6 @@ onDecline(){
         </CardSection>
 
         <CardSection>
-        <Button onPress= { this.onTextPress.bind(this)}>
-          Messaggio
-        </Button>
-        </CardSection>
-
-        <CardSection>
         <Button onPress= {() => this.setState({ showModal: !this.state.showModal})}>
           Elimina
         </Button>
