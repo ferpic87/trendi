@@ -3,20 +3,25 @@ import { View, Text, Picker } from 'react-native';
 import {connect} from 'react-redux';
 import { TicketUpdate } from '../actions';
 import { CardSection, Input } from './common';
+import moment from 'moment';
 
 class TicketForm extends Component {
     render() {
       console.log(this.props);
+      var dataPartenza = moment.unix(this.props.oraPartenza).format('DD/MM/YYYY');
+      var dataArrivo = moment.unix(this.props.oraArrivo).format('DD/MM/YYYY');
+      var oraPartenzaString = moment.unix(this.props.oraPartenza).format('HH:mm');
+      var oraArrivoString = moment.unix(this.props.oraArrivo).format('HH:mm');
       return (
         <View>
           <CardSection>
             <Text style= { styles.titleStyle}>
-              Partenza: {this.props.luogoPartenza} ({this.props.oraPartenza})
+              Partenza: {this.props.luogoPartenza} ({dataPartenza} {oraPartenzaString})
             </Text>
           </CardSection>
           <CardSection>
             <Text style= { styles.titleStyle}>
-              Arrivo: {this.props.luogoArrivo} ({this.props.oraArrivo})
+              Arrivo: {this.props.luogoArrivo} ({dataArrivo} {oraArrivoString})
             </Text>
           </CardSection>
           <CardSection>

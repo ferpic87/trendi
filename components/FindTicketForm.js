@@ -121,7 +121,7 @@ class FindTicketForm extends Component {
   }
 
   render() {
-    const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio } = this.state;
+    const { error, isSelected, partenza, destinazione, isLoaded, dataPartenzaString, dataPartenza, oraPartenzaString, isDateTimePickerVisible, items, messaggio, tableHead, tableData } = this.state;
     let messaggioRisposta = "";
     if (error) {
         messaggioRisposta = "Error" + error.message;
@@ -139,7 +139,7 @@ class FindTicketForm extends Component {
                   label="Partenza"
                   placeholder="Partenza"
                   onChangeText={(text) => {this.setState({partenza:text, isPartenza: true}); this.onTextChanged(text)}}
-                  value={this.state.partenza}
+                  value={partenza}
                 />
               </CardSection>
               <CardSection>
@@ -148,7 +148,7 @@ class FindTicketForm extends Component {
                   label="Destinazione"
                   placeholder="Destinazione"
                   onChangeText={(text) => {this.setState({destinazione:text, isPartenza: false}); this.onTextChanged(text)}}
-                  value={this.state.destinazione}
+                  value={destinazione}
                 />
               </CardSection>
               <Text>{messaggioRisposta}</Text>
@@ -160,12 +160,12 @@ class FindTicketForm extends Component {
               <CardSection>
                 <Input onFocus={this.showDateTimePicker}
                   label="Data/Ora partenza"
-                  value={this.state.dataPartenzaString}
+                  value={dataPartenzaString}
                 />
               </CardSection>
               <CardSection>
                 <DateTimePicker
-                  isVisible={this.state.isDateTimePickerVisible}
+                  isVisible={isDateTimePickerVisible}
                   onConfirm={this.handleDatePicked}
                   onCancel={this.hideDateTimePicker}
                   mode='datetime'
@@ -178,8 +178,17 @@ class FindTicketForm extends Component {
               </CardSection>
               <View >
                 <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-                  <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text}/>
-                  <Rows data={this.state.tableData} textStyle={styles.text}/>
+                  <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+                  {
+                  tableData.map((rowData, index) => (
+                    <Row
+                      key={index}
+                      data={rowData}
+                      style={[styles.text, rowData[2].includes("(v)") && {backgroundColor: '#F7F6E7'}]}
+                      textStyle={styles.text}
+                    />
+                  ))
+                }
                 </Table>
               </View>
             </Card>);
