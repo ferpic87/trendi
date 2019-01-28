@@ -16,10 +16,14 @@ export const TicketUpdate= ({prop, value}) => {
 
 export const TicketCreate = ({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto}) => {
   const { currentUser }= firebase.auth();
-
+  //console.log(currentUser);
+  //const {uid} = firebase.auth();
+  //console.log(uid);
   return(dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/Ticket`)
-      .push({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto})
+    console.log(currentUser.uid);
+    uid = currentUser.uid;
+    firebase.database().ref(`/tickets/`)
+      .push({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto, uid})
       .then(() =>{
         dispatch({ type: TICKET_CREATE});
         Actions.main({type: 'reset'});
@@ -31,14 +35,14 @@ export const TicketFetch= () => {
   const { currentUser } = firebase.auth();
 
   return (dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/Ticket`)
+    firebase.database().ref(`/tickets`)
       .on('value', snapshot => {
           dispatch({ type: TICKET_FETCH_SUCCESS, payload: snapshot.val() });
       });
   };
 };
 
-  export const TicketSave = ({city,number, shift, uid}) => {
+/*  export const TicketSave = ({city,number, shift, uid}) => {
     const { currentUser }= firebase.auth();
 
     return(dispatch) =>{
@@ -49,7 +53,7 @@ export const TicketFetch= () => {
           Actions.main({type: 'reset'});
       });
   };
-};
+};*/
 
 
 

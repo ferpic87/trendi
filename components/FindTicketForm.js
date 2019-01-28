@@ -7,6 +7,7 @@ import {Card, CardSection, Input, Button, Spinner} from './common';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Table, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
+import firebase from 'firebase';
 
 class FindTicketForm extends Component {
 
@@ -71,7 +72,7 @@ class FindTicketForm extends Component {
               messaggio: text
             });
           }
-        )
+        );
       } else {
         this.setState({
           isLoaded: true,
@@ -97,18 +98,37 @@ class FindTicketForm extends Component {
   }
 
   onButtonPress(){
-    //https://www.lefrecce.it/msite/api/solutions?origin=MILANO%20CENTRALE&destination=ROMA%20TERMINI&arflag=A&adate=10/01/2019&atime=17&adultno=1&childno=0&direction=A&frecce=false&onlyRegional=false
+    /*tickets.orderByChild("oraArrivo").on("value", function(data) {
+
+       this.setState({
+         tableData: data.map( sol =>
+           [sol.luogoPartenza+"\n"+moment.unix(sol.oraPartenza).format('H:mm'), sol.luogoArrivo+"\n"+moment.unix(sol.oraArrivo).format('H:mm'), sol.tipoTreno, parseFloat(sol.prezzoInserito)+" €"]
+         )
+       });
+    });*/
+
     var dataGiorno = this.state.dataPartenza.format('DD/MM/YYYY');
-    console.log(this.state.dataPartenza);
     var dataOra = this.state.dataPartenza.format('H');
-    fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+"&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
+
+    fetch("https://www.lefrecce.it/msite/api/solutions?origin="+this.state.partenza+"&destination="+this.state.destinazione+
+    "&arflag=A&adate="+dataGiorno+"&atime="+dataOra+"&adultno=1&childno=0&direction=A&frecce=true&onlyRegional=false")
       .then(res => res.json())
       .then(
         (result) => {
-          this.setState({
-            tableData: result.map( sol =>
+          var trenitaliaData = result.map( sol =>
               [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
-            )
+            );
+
+          var firebaseData = [];
+
+          firebase.database().ref('tickets').on("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var obj = childSnapshot.val();
+                firebaseData.push([obj.luogoPartenza+"\n"+moment.unix(obj.oraPartenza).format('H:mm'), obj.luogoArrivo+"\n"+moment.unix(obj.oraArrivo).format('H:mm'), obj.tipoTreno+" (v)", parseFloat(obj.prezzoInserito)+" €"]);
+            });
+          });
+          this.setState({
+            tableData: firebaseData.concat(trenitaliaData)
           });
         },
         // Note: it's important to handle errors here
@@ -117,7 +137,7 @@ class FindTicketForm extends Component {
         (error) => {
           alert("Errore")
         }
-      );
+    );
   }
 
   render() {
@@ -184,7 +204,7 @@ class FindTicketForm extends Component {
                     <Row
                       key={index}
                       data={rowData}
-                      style={[styles.text, rowData[2].includes("(v)") && {backgroundColor: '#F7F6E7'}]}
+                      style={[styles.text, rowData[2].includes("(v)") && {backgroundColor: '#EFE33E'}]}
                       textStyle={styles.text}
                     />
                   ))
@@ -217,7 +237,7 @@ const styles = StyleSheet.create({
     color:'red'
   },
   head: { height: 40, backgroundColor: '#f1f8ff' },
-  text: { margin: 6 }
+  text: { margin: 1}
 })
 
 const mapStateToProps= ({auth}) => {
