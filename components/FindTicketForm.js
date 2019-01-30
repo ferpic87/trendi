@@ -13,6 +13,7 @@ class FindTicketForm extends Component {
 
   constructor(props) {
     super(props);
+
     var dataDiOggi = moment().format('DD/MM/YYYY H:mm');
     this.state = {
       error: null,
@@ -116,15 +117,18 @@ class FindTicketForm extends Component {
       .then(
         (result) => {
           var trenitaliaData = result.map( sol =>
-              [sol.origin+"\n"+moment.unix(sol.departuretime).format('H:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime).format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
+              [sol.origin+"\n"+moment(sol.departuretime).add(1, 'hours').format('H:mm'), sol.destination+"\n"+moment(sol.arrivaltime).add(1, 'hours').format('H:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
             );
 
+          var multipleFieldSearch = this.state.partenza.toLowerCase()+"-"+this.state.destinazione.toLowerCase()+"-"+this.state.dataPartenza.format('DD-MM-YYYY');
+          console.log(multipleFieldSearch);
           var firebaseData = [];
 
-          firebase.database().ref('tickets').on("value", function(snapshot) {
+          var ref = firebase.database().ref('tickets');
+          ref.orderByChild("parDesData").equalTo(multipleFieldSearch).on("child_added", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var obj = childSnapshot.val();
-                firebaseData.push([obj.luogoPartenza+"\n"+moment.unix(obj.oraPartenza).format('H:mm'), obj.luogoArrivo+"\n"+moment.unix(obj.oraArrivo).format('H:mm'), obj.tipoTreno+" (v)", parseFloat(obj.prezzoInserito)+" €"]);
+                firebaseData.push([obj.luogoPartenza+"\n"+moment(obj.oraPartenza).add(1, 'hours').format('H:mm'), obj.luogoArrivo+"\n"+moment(obj.oraArrivo).add(1, 'hours').format('H:mm'), obj.tipoTreno+" (v)", parseFloat(obj.prezzoInserito)+" €"]);
             });
           });
           this.setState({

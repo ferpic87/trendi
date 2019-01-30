@@ -110,16 +110,18 @@ class SelectTicketForm extends Component {
         (result) => {
           this.setState({
             tableData: result.map( sol =>
-              [sol.origin+"\n"+moment.unix(sol.departuretime/1000).format('HH:mm'), sol.destination+"\n"+moment.unix(sol.arrivaltime/1000).format('HH:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
+              [sol.origin+"\n"+moment(sol.departuretime).add(1, 'hours').format('HH:mm'), sol.destination+"\n"+moment(sol.arrivaltime).add(1, 'hours').format('HH:mm'), sol.trainlist[0].trainidentifier, parseFloat(sol.minprice)+" €"]
             ),
             ticketData: result.map( sol =>
               { var toReturn = {};
+                var giornoMeseAnno = moment(sol.departuretime).format('DD-MM-YYYY');
                 toReturn.prezzo =  sol.minprice;
-                toReturn.oraPartenza = sol.departuretime/1000;
-                toReturn.oraArrivo = sol.arrivaltime/1000;
+                toReturn.oraPartenza = sol.departuretime;
+                toReturn.oraArrivo = sol.arrivaltime;
                 toReturn.tipoTreno = sol.trainlist[0].trainidentifier;
                 toReturn.luogoPartenza = sol.origin;
                 toReturn.luogoArrivo = sol.destination;
+                toReturn.parDesData = sol.origin.toLowerCase()+"-"+sol.destination.toLowerCase()+"-"+giornoMeseAnno;
                 return toReturn;
               })
             });

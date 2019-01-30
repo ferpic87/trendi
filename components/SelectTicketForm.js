@@ -25,11 +25,8 @@ class SelectTicketForm extends Component {
   }
 
   onSavePress() {
-    const { luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto}=this.state;
-    console.log(this.state);
-    console.log("Ticket Create");
-    console.log({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto});
-    this.props.TicketCreate({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto});
+    const { luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto,parDesData}=this.state;
+    this.props.TicketCreate({ luogoPartenza, luogoArrivo, tipoTreno, oraPartenza, oraArrivo, prezzoInserito, pnr, posto, parDesData});
   }
 
   onPrezzoChanged(text){
@@ -48,9 +45,9 @@ class SelectTicketForm extends Component {
 
   render() {
     const { tipoTreno, oraArrivo, oraPartenza, prezzo, luogoPartenza, luogoArrivo } = this.state;
-    var dataGiorno = moment.unix(this.state.oraPartenza).format('DD/MM/YYYY');
-    var dataOraPartenza = moment.unix(this.state.oraPartenza).format('HH:mm');
-    var dataOraArrivo = moment.unix(this.state.oraArrivo).format('HH:mm');
+    var dataGiorno = moment(this.state.oraPartenza).add(1, 'hours').format('DD/MM/YYYY');
+    var dataOraPartenza = moment(this.state.oraPartenza).add(1, 'hours').format('HH:mm');
+    var dataOraArrivo = moment(this.state.oraArrivo).add(1, 'hours').format('HH:mm');
 
     return (<Card>
               <Text>Stai vendendo il biglietto per il treno {tipoTreno} da {luogoPartenza} ({dataOraPartenza}) a {luogoArrivo} ({dataOraArrivo}) del giorno {dataGiorno} - {prezzo}</Text>
