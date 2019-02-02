@@ -124,11 +124,12 @@ class FindTicketForm extends Component {
           console.log(multipleFieldSearch);
           var firebaseData = [];
 
-          var ref = firebase.database().ref('tickets');
-          ref.orderByChild("parDesData").equalTo(multipleFieldSearch).on("child_added", function(snapshot) {
+          var ref = firebase.database().ref('/tickets');
+          ref.on("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var obj = childSnapshot.val();
-                firebaseData.push([obj.luogoPartenza+"\n"+moment(obj.oraPartenza).add(1, 'hours').format('H:mm'), obj.luogoArrivo+"\n"+moment(obj.oraArrivo).add(1, 'hours').format('H:mm'), obj.tipoTreno+" (v)", parseFloat(obj.prezzoInserito)+" €"]);
+                if(obj.parDesData == multipleFieldSearch)
+                  firebaseData.push([obj.luogoPartenza+"\n"+moment(obj.oraPartenza).add(1, 'hours').format('H:mm'), obj.luogoArrivo+"\n"+moment(obj.oraArrivo).add(1, 'hours').format('H:mm'), obj.tipoTreno+" (v)", parseFloat(obj.prezzoInserito)+" €"]);
             });
           });
           this.setState({
