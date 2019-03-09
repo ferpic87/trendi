@@ -1,5 +1,5 @@
 import React, {Component} from 'React';
-import { Text } from 'react-native';
+import {Text} from 'react-native';
 import {connect} from 'react-redux';
 import {emailChanged, registerUser, passwordChanged, loginUser} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
@@ -66,7 +66,7 @@ class LoginForm extends Component {
       <CardSection>
         {this.renderButton()}
       </CardSection>
-      <Text>
+      <Text style={styles.registrati}>
           Non sei registrato? <Text onPress={this.onRegister.bind(this)} >Iscriviti</Text>
       </Text>
       </Card>
@@ -79,6 +79,10 @@ const styles={
     fontSize:20,
     alignSelf:'center',
     color:'red'
+  },
+  registrati: {
+    fontSize:20,
+    alignSelf:'center'
   }
 };
 

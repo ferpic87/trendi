@@ -53,7 +53,6 @@ class List extends Component{
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   //const displayName = state.displayName;
   const Ticket= _.map(state.Ticket, (val, uid) =>{
     return {...val, uid};

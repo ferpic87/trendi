@@ -1,8 +1,9 @@
 import firebase from 'firebase';
 import {AsyncStorage} from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import {Actions} from 'react-native-router-flux';
 import {
     EMAIL_CHANGED,
+    NUMERO_CARTA_CHANGED,
     NAME_CHANGED,
     PASSWORD_CHANGED,
     LOGIN_USER_SUCCESS,
@@ -29,6 +30,14 @@ export const nameChanged = (text) => {
   };
 };
 
+export const numeroCartaChanged = (text) => {
+  return {
+    type: NUMERO_CARTA_CHANGED,
+    payload:text
+  };
+};
+
+
 export const passwordChanged = (text) => {
   return {
     type: PASSWORD_CHANGED,
@@ -47,6 +56,7 @@ export const registerUser = () => {
 };
 
 export const signupUser = ({email, password, displayName}) => {
+  console.log(displayName);
   return (dispatch)=>{
     dispatch ({ type: SIGNUP_USER });
 

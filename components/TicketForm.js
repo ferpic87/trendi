@@ -8,10 +8,10 @@ import moment from 'moment';
 class TicketForm extends Component {
     render() {
       console.log(this.props);
-      var dataPartenza = moment.unix(this.props.oraPartenza).format('DD/MM/YYYY');
-      var dataArrivo = moment.unix(this.props.oraArrivo).format('DD/MM/YYYY');
-      var oraPartenzaString = moment.unix(this.props.oraPartenza).format('HH:mm');
-      var oraArrivoString = moment.unix(this.props.oraArrivo).format('HH:mm');
+      var dataPartenza = moment(this.props.oraPartenza).format('DD/MM/YYYY');
+      var dataArrivo = moment(this.props.oraArrivo).format('DD/MM/YYYY');
+      var oraPartenzaString = moment(this.props.oraPartenza).format('HH:mm');
+      var oraArrivoString = moment(this.props.oraArrivo).format('HH:mm');
       return (
         <View>
           <CardSection>

@@ -9,7 +9,7 @@ import {Actions} from 'react-native-router-flux';
 import { Table, TableWrapper, Cell, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
 
-class SelectTicketForm extends Component {
+class SellTicketForm extends Component {
 
   constructor(props) {
     super(props);
@@ -252,4 +252,4 @@ const mapStateToProps= ({auth}) => {
   return { email, password, error, loading};
 };
 
-export default connect(mapStateToProps, { textChanged }) (SelectTicketForm);
+export default connect(mapStateToProps, { textChanged }) (SellTicketForm);

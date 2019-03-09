@@ -4,6 +4,7 @@ import {
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAIL,
     NAME_CHANGED,
+    NUMERO_CARTA_CHANGED,
     SIGNUP_USER_FAIL,
     LOGIN_USER_NOT_REGISTERED,
     SAVE_USER,
@@ -26,6 +27,8 @@ switch (action.type) {
       return {...state, password: action.payload };
     case NAME_CHANGED:
         return {...state, displayName: action.payload };
+    case NUMERO_CARTA_CHANGED:
+        return {...state, numeroCarta: action.payload };
     case LOGIN_USER:
         return {...state, loading: true, error: '' };
     case LOGIN_USER_SUCCESS:

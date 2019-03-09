@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import FindTicketForm from './components/FindTicketForm';
 import SellTicketForm from './components/SellTicketForm';
+import BuyTicketForm from './components/BuyTicketForm';
 import SelectTicketForm from './components/SelectTicketForm';
 import List from './components/List';
 import Create from './components/Create';
@@ -32,6 +33,7 @@ const RouterComponent = () => {
           <Scene key = "SellTicket" component={SellTicketForm} title="Vendi biglietto" />
           <Scene key = "SelezionaBiglietto" component={SelectTicketForm} title="Vendi biglietto" />
           <Scene key = "TicketEdit" component={TicketEdit} title="Modifica" />
+          <Scene key = "BuyTicket" component={BuyTicketForm} title="Compra biglietto" />
         </Scene>
       </Scene>
     </Router>

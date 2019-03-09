@@ -1,10 +1,18 @@
 import React, {Component} from 'React';
-import { Text } from 'react-native';
+import { Text, Picker } from 'react-native';
 import {connect} from 'react-redux';
-import {emailChanged, nameChanged, passwordChanged, signupUser} from '../actions';
+import {emailChanged, nameChanged, numeroCartaChanged, passwordChanged, signupUser} from '../actions';
 import {Card, CardSection, Input, Button, Spinner} from './common';
 
 class SignupForm extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      metodoPagamento: "carta"
+    }
+  }
+
   onEmailChange (text){
     this.props.emailChanged(text);
   }
@@ -13,13 +21,16 @@ class SignupForm extends Component {
     this.props.nameChanged(text);
   }
 
+  onNumeroCartaChange (text){
+    this.props.numeroCartaChanged(text);
+  }
+
   onPasswordChange(text){
     this.props.passwordChanged(text);
   }
 
   onButtonPress(){
     const {email, password, displayName }= this.props;
-
     this.props.signupUser({ email, password, displayName});
   }
 
@@ -65,6 +76,25 @@ class SignupForm extends Component {
           value={this.props.password}
         />
       </CardSection>
+      <CardSection>
+        <Picker
+          selectedValue={this.state.metodoPagamento}
+          style={{height: 70, width: 250}}
+          onValueChange={(itemValue, itemIndex) =>
+            this.setState({metodoPagamento: itemValue})
+          }>
+          <Picker.Item label="Carta Credito/Debito" value="carta" />
+          <Picker.Item label="Paypal" value="paypal" />
+        </Picker>
+      </CardSection>
+      <CardSection>
+        <Input
+          label="Numero carta"
+          placeholder="Numero carta"
+          onChangeText={this.onNumeroCartaChange.bind(this)}
+          value={this.props.numeroCarta}
+        />
+      </CardSection>
 
       <Text style={styles.errorTextStyle}>
         {this.props.error}
@@ -87,8 +117,8 @@ const styles={
 };
 
 const mapStateToProps= ({auth}) => {
-  const{ email, password, error, loading} = auth;
-  return { email, password, error, loading};
+  const{ email, password, metodoPagamento, displayName, error, loading} = auth;
+  return { email, password, metodoPagamento, displayName, error, loading};
 };
 
-export default connect(mapStateToProps, { nameChanged, emailChanged, passwordChanged, signupUser }) (SignupForm);
+export default connect(mapStateToProps, { nameChanged, numeroCartaChanged, emailChanged, passwordChanged, signupUser }) (SignupForm);
